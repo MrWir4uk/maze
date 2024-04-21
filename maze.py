@@ -39,13 +39,13 @@ class Player(Sprite):
 
     def update(self):
         key_pressed = key.get_pressed()
-        if key_pressed[K_w] or key_pressed[K_UP]  and self.rect.y > 0:
+        if (key_pressed[K_w] or key_pressed[K_UP])  and self.rect.y > 0:
             self.rect.y -= self.speed
-        if key_pressed[K_s] or key_pressed[K_DOWN] and self.rect.bottom < HEIGHT:
+        if (key_pressed[K_s] or key_pressed[K_DOWN]) and self.rect.bottom < HEIGHT:
             self.rect.y += self.speed
-        if key_pressed[K_a] or key_pressed[K_LEFT]  and self.rect.x > 0:
+        if (key_pressed[K_a] or key_pressed[K_LEFT])  and self.rect.x > 0:
             self.rect.x -= self.speed
-        if key_pressed[K_d] or key_pressed[K_RIGHT] and self.rect.right < WIDTH:
+        if (key_pressed[K_d] or key_pressed[K_RIGHT]) and self.rect.right < WIDTH:
             self.rect.x += self.speed
 
 
