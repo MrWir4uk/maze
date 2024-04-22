@@ -1,5 +1,6 @@
 #створи гру "Лабіринт"!
 from pygame import *
+from typing import Any
 
 init()
 mixer.init()
@@ -9,7 +10,11 @@ mixer.music.set_volume(0.25)
 
 kick = mixer.Sound
 
-WIDTH, HEIGHT = 700,500
+MAP_WIDTH, MAP_HEIGHT = 25, 20#
+TILESIZE = 40 #розмір квадратика карти
+
+
+WIDTH, HEIGHT = MAP_WIDTH*TILESIZE, MAP_HEIGHT*TILESIZE
 window = display.set_mode((WIDTH,HEIGHT))
 FPS = 60
 clock = time.Clock()
@@ -18,7 +23,8 @@ bg = image.load("background.jpg")
 bg = transform.scale(bg, (WIDTH,HEIGHT))
 player_img = image.load("hero.png")
 player2_img = image.load("cyborg.png")
-
+wall_img = image.load("wall.png")
+gold_img = image.load("treasure.png")
 
 
 all_sprite = sprite.Group()
@@ -30,6 +36,8 @@ class Sprite(sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         all_sprite.add(self)
+
+
 
 class Player(Sprite):
     def __init__(self, sprite_img, width, height, x, y):
@@ -51,9 +59,27 @@ class Player(Sprite):
 
 
 
-player1 = Player(player_img, 70,70,160,300)
-player2 = Player(player2_img, 70,70,470,300)
+player1 = Player(player_img, TILESIZE,TILESIZE,300,300)
+player2 = Player(player2_img, TILESIZE,TILESIZE,470,300)
+walls = sprite.Group()
 
+
+with open("map.txt", 'r') as f:
+    map = f.readlines()
+    x = 0
+    y = 0
+    print(map)
+    for line in map:
+        for symbol in line:
+            if symbol == "W":
+                walls.add(Sprite(wall_img, TILESIZE, TILESIZE, x,y))
+            if symbol == "P":
+                player1.rect.x = x
+                player1.rect.x = x
+            x += TILESIZE
+        y += TILESIZE
+        x = 0
+       
 
 
 run = True
@@ -70,3 +96,5 @@ while run:
     display.update()
     clock.tick(FPS)
     
+# W - Стіна
+# P - Гравець
