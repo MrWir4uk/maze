@@ -14,6 +14,7 @@ MAP_WIDTH, MAP_HEIGHT = 25, 20#
 TILESIZE = 40 #розмір квадратика карти
 
 
+
 WIDTH, HEIGHT = MAP_WIDTH*TILESIZE, MAP_HEIGHT*TILESIZE
 window = display.set_mode((WIDTH,HEIGHT))
 FPS = 60
@@ -43,7 +44,7 @@ class Player(Sprite):
     def __init__(self, sprite_img, width, height, x, y):
         super().__init__(sprite_img, width, height, x, y)
         self.hp = 100
-        self.speed = 4
+        self.speed = 2.6
 
     def update(self):
         key_pressed = key.get_pressed()
@@ -59,10 +60,10 @@ class Player(Sprite):
 
 
 
-player1 = Player(player_img, TILESIZE,TILESIZE,300,300)
-player2 = Player(player2_img, TILESIZE,TILESIZE,470,300)
+player1 = Player(player_img, TILESIZE,TILESIZE, 5, 40)
+player2 = Player(player2_img, TILESIZE,TILESIZE, 80, 40)
 walls = sprite.Group()
-
+gold = sprite.Group()
 
 with open("map.txt", 'r') as f:
     map = f.readlines()
@@ -76,6 +77,8 @@ with open("map.txt", 'r') as f:
             if symbol == "P":
                 player1.rect.x = x
                 player1.rect.x = x
+            if symbol == "g":
+                gold = Sprite(gold_img, TILESIZE, TILESIZE,x,y)
             x += TILESIZE
         y += TILESIZE
         x = 0
