@@ -1,8 +1,12 @@
 #створи гру "Лабіринт"!
 from pygame import *
 from typing import Any
+from random import choice
 
 init()
+font.init()
+font1 = font.SysFont("Impact", 85)
+finish_text = font1.render("GAME OVER", True, (235, 64, 52))
 mixer.init()
 mixer.music.load("jungles.ogg")
 mixer.music.play()
@@ -36,6 +40,7 @@ class Sprite(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.mask = mask.from_surface(self.image)
         all_sprite.add(self)
 
 
@@ -48,6 +53,7 @@ class Player(Sprite):
 
     def update(self):
         key_pressed = key.get_pressed()
+        old_pos = self.rect.x, self.rect.y
         if (key_pressed[K_w] or key_pressed[K_UP])  and self.rect.y > 0:
             self.rect.y -= self.speed
         if (key_pressed[K_s] or key_pressed[K_DOWN]) and self.rect.bottom < HEIGHT:
@@ -56,24 +62,57 @@ class Player(Sprite):
             self.rect.x -= self.speed
         if (key_pressed[K_d] or key_pressed[K_RIGHT]) and self.rect.right < WIDTH:
             self.rect.x += self.speed
+        
+        collide_list = sprite.spritecollide(self, walls, False, sprite.collide_mask)
+        if len(collide_list) > 0:
+            self.rect.x , self.rect.y = old_pos
+
+        enemy_collide = sprite.spritecollide(self, enemys, False, sprite.collide_mask)
+        if len(enemy_collide) > 0:
+            self.hp -= 100
+            
+class Enemy(Sprite):
+    def __init__(self, sprite_img, width, height, x, y):
+        super().__init__(sprite_img, width, height, x, y)
+        self.damage = 20
+        self.speed = 2
+        self.dir_list = ["right", "left", "up", "down"]
+        self.dir = choice(self.dir_list)
 
 
+    def update(self):
+        key_pressed = key.get_pressed()
+        old_pos = self.rect.x, self.rect.y
+        if self.dir == "up"  and self.rect.y > 0:
+            self.rect.y -= self.speed
+        if self.dir == "down" and self.rect.bottom < HEIGHT:
+            self.rect.y += self.speed
+        if self.dir == "left"  and self.rect.x > 0:
+            self.rect.x -= self.speed
+        if self.dir == "right" and self.rect.right < WIDTH:
+            self.rect.x += self.speed
+        
+        collide_list = sprite.spritecollide(self, walls, False, sprite.collide_mask)
+        if len(collide_list) > 0:
+            self.rect.x , self.rect.y = old_pos
+            self.dir = choice(self.dir_list)     
 
 
-player1 = Player(player_img, TILESIZE,TILESIZE, 5, 40)
-player2 = Player(player2_img, TILESIZE,TILESIZE, 80, 40)
+player1 = Player(player_img, TILESIZE-5,TILESIZE-5, 5, 40)
 walls = sprite.Group()
+enemys = sprite.Group()
 gold = sprite.Group()
 
 with open("map.txt", 'r') as f:
     map = f.readlines()
     x = 0
     y = 0
-    print(map)
     for line in map:
         for symbol in line:
             if symbol == "W":
                 walls.add(Sprite(wall_img, TILESIZE, TILESIZE, x,y))
+            if symbol == "E":
+                enemys.add(Enemy(player2_img, TILESIZE, TILESIZE, x,y))
             if symbol == "P":
                 player1.rect.x = x
                 player1.rect.x = x
@@ -86,16 +125,23 @@ with open("map.txt", 'r') as f:
 
 
 run = True
-
+finish = False
 while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
     window.blit(bg, (0,0))
-    
-    all_sprite.draw(window)
-    all_sprite.update()
+    if player1.hp <= 0:
+        finish = True
+    if sprite.collide_mask(player1, gold):
+        finish = True
+        finish_text = font1.render("YOU WIN", True, (235, 64, 52))
 
+    all_sprite.draw(window)
+    if not finish:
+        all_sprite.update()
+    if finish:
+        window.blit(finish_text, (280, 300) )
     display.update()
     clock.tick(FPS)
     

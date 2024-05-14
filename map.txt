@@ -1,19 +1,19 @@
 WWWWWWWWWWWWWWWWWWWWWWWWW
-W P                     W
+W P          E          W
 W    WWWW               W
 W        WWW    WWWW    W
 W    WWW                W
 W      W   ww  WW   W   W
-W      W   ww    W   W  W
+W      W   ww   E W   W W
 W   W  W   w    wWWWWWwwW
 W      WWWWWW           W
 W W w     W  W   W      W
 W   WWWWWWW    W wwwwwWWW
 W            W          W
-W      W    WWW         W
+W   E   W    WWW        W
 W  WWWWWWWWWW     wWW W W 
 W  W        W   WW    W W
 W  W    WWWWW           W
-W  W    W          W    W
+W  W   EW          W    W
 W       W     WWW    g  W
-WWWWWWWWWWWWWWWWWWWWWwWWW  
+WWWWWWWWWWWWWWWWWWWWWWWWW
