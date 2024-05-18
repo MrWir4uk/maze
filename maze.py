@@ -27,6 +27,7 @@ clock = time.Clock()
 bg = image.load("background.jpg")
 bg = transform.scale(bg, (WIDTH,HEIGHT))
 player_img = image.load("hero.png")
+player_img_two = image.load("hero.png")
 player2_img = image.load("cyborg.png")
 wall_img = image.load("wall.png")
 gold_img = image.load("treasure.png")
@@ -54,13 +55,13 @@ class Player(Sprite):
     def update(self):
         key_pressed = key.get_pressed()
         old_pos = self.rect.x, self.rect.y
-        if (key_pressed[K_w] or key_pressed[K_UP])  and self.rect.y > 0:
+        if key_pressed[K_w]  and self.rect.y > 0:
             self.rect.y -= self.speed
-        if (key_pressed[K_s] or key_pressed[K_DOWN]) and self.rect.bottom < HEIGHT:
+        if key_pressed[K_s] and self.rect.bottom < HEIGHT:
             self.rect.y += self.speed
-        if (key_pressed[K_a] or key_pressed[K_LEFT])  and self.rect.x > 0:
+        if key_pressed[K_a]   and self.rect.x > 0:
             self.rect.x -= self.speed
-        if (key_pressed[K_d] or key_pressed[K_RIGHT]) and self.rect.right < WIDTH:
+        if key_pressed[K_d]  and self.rect.right < WIDTH:
             self.rect.x += self.speed
         
         collide_list = sprite.spritecollide(self, walls, False, sprite.collide_mask)
@@ -71,6 +72,28 @@ class Player(Sprite):
         if len(enemy_collide) > 0:
             self.hp -= 100
             
+    def update2(self):
+        key_pressed = key.get_pressed()
+        old_pos = self.rect.x, self.rect.y
+        if key_pressed[K_UP]  and self.rect.y > 0:
+            self.rect.y -= self.speed
+        if key_pressed[K_DOWN] and self.rect.bottom < HEIGHT:
+            self.rect.y += self.speed
+        if key_pressed[K_LEFT]  and self.rect.x > 0:
+            self.rect.x -= self.speed
+        if key_pressed[K_RIGHT] and self.rect.right < WIDTH:
+            self.rect.x += self.speed
+        
+        collide_list = sprite.spritecollide(self, walls, False, sprite.collide_mask)
+        if len(collide_list) > 0:
+            self.rect.x , self.rect.y = old_pos
+
+        enemy_collide = sprite.spritecollide(self, enemys, False, sprite.collide_mask)
+        if len(enemy_collide) > 0:
+            self.hp -= 100
+            
+
+
 class Enemy(Sprite):
     def __init__(self, sprite_img, width, height, x, y):
         super().__init__(sprite_img, width, height, x, y)
@@ -99,6 +122,7 @@ class Enemy(Sprite):
 
 
 player1 = Player(player_img, TILESIZE-5,TILESIZE-5, 5, 40)
+player2 = Player(player_img_two, TILESIZE-5,TILESIZE-5, 40, 40)
 walls = sprite.Group()
 enemys = sprite.Group()
 gold = sprite.Group()
