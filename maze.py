@@ -71,7 +71,13 @@ class Player(Sprite):
         enemy_collide = sprite.spritecollide(self, enemys, False, sprite.collide_mask)
         if len(enemy_collide) > 0:
             self.hp -= 100
-            
+
+class Player_two(Sprite):
+    def __init__(self, sprite_img, width, height, x, y):
+        super().__init__(sprite_img, width, height, x, y)
+        self.hp = 100
+        self.speed = 2.6 
+
     def update2(self):
         key_pressed = key.get_pressed()
         old_pos = self.rect.x, self.rect.y
@@ -121,8 +127,10 @@ class Enemy(Sprite):
             self.dir = choice(self.dir_list)     
 
 
+
+
 player1 = Player(player_img, TILESIZE-5,TILESIZE-5, 5, 40)
-player2 = Player(player_img_two, TILESIZE-5,TILESIZE-5, 40, 40)
+player2 = Player_two(player_img_two, TILESIZE-5,TILESIZE-5, 40, 40)
 walls = sprite.Group()
 enemys = sprite.Group()
 gold = sprite.Group()
