@@ -129,8 +129,8 @@ class Enemy(Sprite):
 
 
 
-player1 = Player(player_img, TILESIZE-5,TILESIZE-5, 5, 40)
-player2 = Player_two(player_img_two, TILESIZE-5,TILESIZE-5, 40, 40)
+player1 = Player(player_img, TILESIZE-8,TILESIZE-8, 5, 40)
+player2 = Player_two(player_img_two, TILESIZE-8,TILESIZE-8, 40, 40)
 walls = sprite.Group()
 enemys = sprite.Group()
 
