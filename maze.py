@@ -24,7 +24,7 @@ window = display.set_mode((WIDTH,HEIGHT))
 FPS = 60
 clock = time.Clock()
 
-bg = image.load("background (2).png")
+bg = image.load("background.jpg")
 bg = transform.scale(bg, (WIDTH,HEIGHT))
 player_img = image.load("hero.png")
 player_img_two = image.load("hero.png")
