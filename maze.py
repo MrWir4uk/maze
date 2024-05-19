@@ -24,7 +24,7 @@ window = display.set_mode((WIDTH,HEIGHT))
 FPS = 60
 clock = time.Clock()
 
-bg = image.load("background.jpg")
+bg = image.load("background (2).png")
 bg = transform.scale(bg, (WIDTH,HEIGHT))
 player_img = image.load("hero.png")
 player_img_two = image.load("hero.png")
@@ -50,7 +50,7 @@ class Player(Sprite):
     def __init__(self, sprite_img, width, height, x, y):
         super().__init__(sprite_img, width, height, x, y)
         self.hp = 100
-        self.speed = 2.6
+        self.speed = 3
 
     def update(self):
         key_pressed = key.get_pressed()
@@ -76,9 +76,9 @@ class Player_two(Sprite):
     def __init__(self, sprite_img, width, height, x, y):
         super().__init__(sprite_img, width, height, x, y)
         self.hp = 100
-        self.speed = 2.6 
+        self.speed = 3
 
-    def update2(self):
+    def update(self):
         key_pressed = key.get_pressed()
         old_pos = self.rect.x, self.rect.y
         if key_pressed[K_UP]  and self.rect.y > 0:
@@ -104,7 +104,7 @@ class Enemy(Sprite):
     def __init__(self, sprite_img, width, height, x, y):
         super().__init__(sprite_img, width, height, x, y)
         self.damage = 20
-        self.speed = 2
+        self.speed = 2.3
         self.dir_list = ["right", "left", "up", "down"]
         self.dir = choice(self.dir_list)
 
@@ -133,27 +133,39 @@ player1 = Player(player_img, TILESIZE-5,TILESIZE-5, 5, 40)
 player2 = Player_two(player_img_two, TILESIZE-5,TILESIZE-5, 40, 40)
 walls = sprite.Group()
 enemys = sprite.Group()
-gold = sprite.Group()
 
-with open("map.txt", 'r') as f:
-    map = f.readlines()
-    x = 0
-    y = 0
-    for line in map:
-        for symbol in line:
-            if symbol == "W":
-                walls.add(Sprite(wall_img, TILESIZE, TILESIZE, x,y))
-            if symbol == "E":
-                enemys.add(Enemy(player2_img, TILESIZE, TILESIZE, x,y))
-            if symbol == "P":
-                player1.rect.x = x
-                player1.rect.x = x
-            if symbol == "g":
-                gold = Sprite(gold_img, TILESIZE, TILESIZE,x,y)
-            x += TILESIZE
-        y += TILESIZE
+
+def load_map(map_file):
+    global gold
+    for s in all_sprite:
+        if s != player1 and s != player2:
+            s.kill()
+        
+    with open(map_file , 'r') as f:
+        map = f.readlines()
         x = 0
+        y = 0
+        for line in map:
+            for symbol in line:
+                if symbol == "W":
+                    walls.add(Sprite(wall_img, TILESIZE, TILESIZE, x,y))
+                if symbol == "E":
+                    enemys.add(Enemy(player2_img, TILESIZE, TILESIZE, x,y))
+                if symbol == "P":
+                    player1.rect.x = x
+                    player1.rect.x = x
+                if symbol == "R":
+                    player2.rect.x = x
+                    player2.rect.x = x
+                if symbol == "g":
+                    gold = Sprite(gold_img, TILESIZE, TILESIZE,x,y)
+                x += TILESIZE
+            y += TILESIZE
+            x = 0
        
+load_map("map.txt")
+
+lvl = 1
 
 
 run = True
@@ -165,9 +177,16 @@ while run:
     window.blit(bg, (0,0))
     if player1.hp <= 0:
         finish = True
-    if sprite.collide_mask(player1, gold):
+    if player2.hp <= 0:
         finish = True
-        finish_text = font1.render("YOU WIN", True, (235, 64, 52))
+    if sprite.collide_mask(player1, gold) and sprite.collide_mask(player2, gold): 
+        if lvl == 1:
+            lvl += 1
+            load_map("map2.txt")
+
+        else:
+            finish = True
+            finish_text = font1.render("YOU WIN", True, (235, 64, 52))
 
     all_sprite.draw(window)
     if not finish:
